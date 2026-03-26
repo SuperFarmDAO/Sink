@@ -23,10 +23,12 @@ export default defineNuxtConfig({
     redirectStatusCode: '301',
     linkCacheTtl: 60,
     redirectWithQuery: false,
-    homeURL: '',
+    homeURL: '/dashboard',
     cfAccountId: '',
     cfApiToken: '',
     dataset: 'sink',
+    accessAuthEnabled: process.env.NUXT_ACCESS_AUTH_ENABLED === 'true',
+    accessLogHashSalt: process.env.NUXT_ACCESS_LOG_HASH_SALT || '',
     aiModel: '@cf/qwen/qwen3-30b-a3b-fp8',
     aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information should be derived from the URL and page content (if provided). Do not make any assumptions beyond the given information. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
     caseSensitive: false,
@@ -36,6 +38,7 @@ export default defineNuxtConfig({
     notFoundRedirect: '',
     safeBrowsingDoh: '', // Set to DoH URL to enable auto-detection, e.g. https://family.cloudflare-dns.com/dns-query
     public: {
+      accessAuthEnabled: process.env.NUXT_ACCESS_AUTH_ENABLED === 'true',
       previewMode: '',
       slugDefaultLength: '6',
       kvBatchLimit: '50',

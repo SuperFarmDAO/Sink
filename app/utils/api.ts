@@ -9,11 +9,11 @@ type APIOptions = Omit<NitroFetchOptions<NitroFetchRequest>, 'headers'> & {
 
 export function useAPI<T = unknown>(api: string, options?: APIOptions): Promise<T> {
   const { getToken, removeToken } = useAuthToken()
+  const token = getToken()
+  const authHeaders = token ? { Authorization: `Bearer ${token}` } : {}
 
   const mergedOptions = defu(options || {}, {
-    headers: {
-      Authorization: `Bearer ${getToken() || ''}`,
-    },
+    headers: authHeaders,
   }) as NitroFetchOptions<NitroFetchRequest>
 
   return $fetch<T>(api, mergedOptions).catch((error) => {

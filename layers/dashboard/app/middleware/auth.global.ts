@@ -5,8 +5,17 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const { getToken } = useAuthToken()
 
   if (to.path.startsWith('/dashboard') && to.path !== '/dashboard/login') {
-    if (!getToken())
+    if (getToken())
+      return
+
+    try {
+      await useAPI('/api/verify')
+      return
+    }
+    catch (e) {
+      console.warn(e)
       return navigateTo('/dashboard/login')
+    }
   }
 
   if (to.path === '/dashboard/login') {
