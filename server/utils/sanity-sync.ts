@@ -153,6 +153,14 @@ async function fetchMarketingLinksFromSanity(config: SyncConfig): Promise<Market
   }
 }
 
+function optionalTrimmedString(value: string | null | undefined): string | undefined {
+  if (value == null) {
+    return undefined
+  }
+  const trimmed = String(value).trim()
+  return trimmed.length > 0 ? trimmed : undefined
+}
+
 function createLinkPayload(source: SanityMarketingLink, caseSensitive: boolean): Link {
   const candidateSlug = source.shortSlug?.trim()
     || slugify(source.title || '')
@@ -166,9 +174,9 @@ function createLinkPayload(source: SanityMarketingLink, caseSensitive: boolean):
   return LinkSchema.parse({
     slug,
     url: source.destinationUrl,
-    title: source.ogTitle || source.title,
-    description: source.ogDescription,
-    image: source.ogImageUrl,
+    title: optionalTrimmedString(source.ogTitle) ?? optionalTrimmedString(source.title),
+    description: optionalTrimmedString(source.ogDescription),
+    image: optionalTrimmedString(source.ogImageUrl),
     cloaking: source.cloaking,
     password,
     comment,
